@@ -14,7 +14,7 @@ export class Modal {
   private readonly boton = viewChild<ElementRef<HTMLButtonElement>>('boton');
 
   constructor() {
-    // Al abrirse, el foco va al botón para poder cerrar con Enter.
+
     effect(() => this.boton()?.nativeElement.focus());
   }
 

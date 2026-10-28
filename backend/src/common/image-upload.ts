@@ -7,10 +7,7 @@ import { memoryStorage } from 'multer';
 
 export const UPLOADS_DIR = join(process.cwd(), 'uploads');
 
-/**
- * La imagen se mantiene en memoria y solo se escribe a disco cuando el resto
- * de los datos ya fueron validados (así no quedan archivos huérfanos).
- */
+
 export const imageUploadOptions: MulterOptions = {
   storage: memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
@@ -25,10 +22,7 @@ export const imageUploadOptions: MulterOptions = {
   },
 };
 
-/**
- * URL pública del backend: PUBLIC_URL si está definida; en Render se usa la que
- * provee automáticamente (RENDER_EXTERNAL_URL); en local, localhost.
- */
+
 function urlPublica(): string {
   return (
     process.env.PUBLIC_URL ??
@@ -37,7 +31,7 @@ function urlPublica(): string {
   );
 }
 
-/** Guarda la imagen en /uploads y devuelve su URL pública. */
+
 export async function saveImage(file: Express.Multer.File): Promise<string> {
   await mkdir(UPLOADS_DIR, { recursive: true });
   const filename = `${randomUUID()}${extname(file.originalname).toLowerCase()}`;

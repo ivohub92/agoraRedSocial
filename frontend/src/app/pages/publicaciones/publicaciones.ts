@@ -5,7 +5,7 @@ import { AuthService } from '../../core/auth.service';
 import { calcularEdad } from '../../core/fechas';
 import { Avatar } from '../../shared/avatar/avatar';
 
-// Sprint 1: estructura de la pantalla. El listado, el alta y los "me gusta" llegan en el Sprint 2.
+
 @Component({
   selector: 'app-publicaciones',
   imports: [RouterLink, DatePipe, Avatar],

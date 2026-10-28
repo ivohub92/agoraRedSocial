@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 
-// Sprint 1: navegación libre entre pantallas (los guards de sesión se agregan en el Sprint 3).
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
   {

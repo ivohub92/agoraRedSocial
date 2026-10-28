@@ -19,7 +19,7 @@ export interface LoginRequest {
   password: string;
 }
 
-/** Forma de los errores que devuelve NestJS. */
+
 export interface ApiError {
   statusCode: number;
   message: string | string[];

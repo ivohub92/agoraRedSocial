@@ -58,8 +58,7 @@ export class Login {
   protected readonly enviando = signal(false);
 
   protected readonly form = inject(FormBuilder).nonNullable.group({
-    // En el login solo se exige completar los campos: mostrar las reglas de la
-    // contraseña (o del usuario) daría pistas a quien intenta adivinar una cuenta.
+
     identificador: ['', Validators.required],
     password: ['', Validators.required],
   });

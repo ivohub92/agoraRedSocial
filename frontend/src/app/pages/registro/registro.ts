@@ -16,7 +16,7 @@ const TIPOS_IMAGEN = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const MAX_IMAGEN_MB = 5;
 const NIVELES = ['', 'Débil', 'Regular', 'Segura', 'Muy segura'];
 
-/** Campos que se envían al backend (los términos solo se validan en el front). */
+
 const CAMPOS_API = [
   'nombre',
   'apellido',
@@ -80,7 +80,7 @@ export class Registro implements OnDestroy {
     initialValue: '',
   });
 
-  /** Medidor de 4 niveles: largo, mayúscula, número y (símbolo o 12+ caracteres). */
+
   protected readonly fuerza = computed(() => {
     const p = this.password();
     if (!p) return 0;

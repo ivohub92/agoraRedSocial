@@ -10,7 +10,7 @@ export interface DatosModal {
   alCerrar?: () => void;
 }
 
-/** Reemplaza a alert(): cualquier componente puede abrir un modal con un mensaje. */
+
 @Injectable({ providedIn: 'root' })
 export class ModalService {
   readonly actual = signal<DatosModal | null>(null);

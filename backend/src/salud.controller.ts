@@ -7,14 +7,14 @@ import { estadoMongo } from './common/estado-mongo.js';
 const ESTADOS = ['desconectado', 'conectado', 'conectando', 'desconectando'];
 const ESPERA_MAXIMA_MS = 12_000;
 
-/** GET / → indica si el backend está andando y si pudo conectarse a MongoDB. */
+
 @Controller()
 export class SaludController {
   constructor(@InjectConnection() private readonly conexion: Connection) {}
 
   @Get()
   async salud(@Res({ passthrough: true }) res: Response) {
-    // Recién iniciado puede estar "conectando": se espera el resultado un momento.
+
     if (this.conexion.readyState === 2) {
       await Promise.race([
         this.conexion.asPromise().catch(() => undefined),

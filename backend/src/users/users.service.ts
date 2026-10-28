@@ -18,7 +18,7 @@ export class UsersService {
       .lean();
   }
 
-  /** Busca por correo o por nombre de usuario (el login acepta cualquiera de los dos). */
+
   findByIdentificador(identificador: string): Promise<UserDocument | null> {
     return this.userModel
       .findOne({

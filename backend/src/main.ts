@@ -6,7 +6,7 @@ import { AppModule } from './app.module.js';
 const PORT = process.env.PORT ?? 3000;
 
 async function bootstrap() {
-  // abortOnError: false → si algo falla al iniciar, se lanza el error en vez de cortar el proceso.
+
   const app = await NestFactory.create(AppModule, { abortOnError: false });
 
   app.enableCors({
@@ -15,7 +15,7 @@ async function bootstrap() {
       .map((o) => o.trim()),
   });
 
-  // Valida todos los DTOs: descarta propiedades desconocidas y responde 400 si algo no cumple.
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -27,11 +27,7 @@ async function bootstrap() {
   await app.listen(PORT);
 }
 
-/**
- * Si la aplicación no puede iniciar (por ejemplo, no conecta a MongoDB), se levanta un
- * servidor mínimo que responde 503 explicando el motivo, con las credenciales ocultas.
- * Así el error se ve en el navegador sin tener que buscarlo en los logs del hosting.
- */
+
 function servirDiagnostico(err: unknown) {
   const detalle = (err instanceof Error ? err.message : String(err)).replace(
     /\/\/[^@\s/]+@/g,

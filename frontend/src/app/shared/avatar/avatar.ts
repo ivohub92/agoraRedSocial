@@ -3,10 +3,7 @@ import { Usuario } from '../../core/models';
 
 type DatosAvatar = Pick<Usuario, 'nombre' | 'apellido' | 'imagenPerfil'>;
 
-/**
- * Foto de perfil recortada en un cuadrado (en blanco y negro, como pide el sistema)
- * o, si no hay foto, un monograma plano con las iniciales.
- */
+
 @Component({
   selector: 'app-avatar',
   template: `
@@ -53,7 +50,7 @@ type DatosAvatar = Pick<Usuario, 'nombre' | 'apellido' | 'imagenPerfil'>;
 })
 export class Avatar {
   readonly usuario = input<DatosAvatar | null>(null);
-  /** Lado en px; sin valor ocupa todo el ancho disponible. */
+
   readonly size = input<number | null>(null);
   readonly variante = input<'otro' | 'propio' | 'en-barra'>('otro');
 
