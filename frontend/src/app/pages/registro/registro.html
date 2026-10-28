@@ -88,10 +88,22 @@
 
       <div class="field">
         <label for="fechaNacimiento">Fecha de nacimiento</label>
-        <input id="fechaNacimiento" class="input" type="date" formControlName="fechaNacimiento" [class.invalid]="invalido('fechaNacimiento')" />
+        <app-fecha-select
+          inputId="fechaNacimiento"
+          formControlName="fechaNacimiento"
+          [invalido]="invalido('fechaNacimiento')"
+        />
         @if (invalido('fechaNacimiento')) {
           <div class="error">
-            {{ form.controls.fechaNacimiento.hasError('required') ? 'La fecha de nacimiento es obligatoria.' : 'Tenés que tener al menos 13 años.' }}
+            @if (form.controls.fechaNacimiento.hasError('required')) {
+              Elegí día, mes y año de nacimiento.
+            } @else if (form.controls.fechaNacimiento.hasError('fechaFutura')) {
+              La fecha de nacimiento no puede ser futura.
+            } @else if (form.controls.fechaNacimiento.hasError('edadMinima')) {
+              Tenés que tener al menos 13 años.
+            } @else {
+              La fecha no es válida.
+            }
           </div>
         }
       </div>

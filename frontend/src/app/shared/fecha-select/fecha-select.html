@@ -1,0 +1,44 @@
+<div class="fecha">
+  <select
+    class="input"
+    [id]="inputId()"
+    aria-label="Día"
+    [class.invalid]="invalido()"
+    [disabled]="deshabilitado()"
+    (change)="cambiar('dia', $event)"
+    (blur)="onTouched()"
+  >
+    <option value="" [selected]="!dia()">Día</option>
+    @for (d of dias(); track d) {
+      <option [value]="d" [selected]="d === dia()">{{ d }}</option>
+    }
+  </select>
+
+  <select
+    class="input"
+    aria-label="Mes"
+    [class.invalid]="invalido()"
+    [disabled]="deshabilitado()"
+    (change)="cambiar('mes', $event)"
+    (blur)="onTouched()"
+  >
+    <option value="" [selected]="!mes()">Mes</option>
+    @for (m of meses(); track m.numero) {
+      <option [value]="m.numero" [selected]="m.numero === mes()">{{ m.nombre }}</option>
+    }
+  </select>
+
+  <select
+    class="input"
+    aria-label="Año"
+    [class.invalid]="invalido()"
+    [disabled]="deshabilitado()"
+    (change)="cambiar('anio', $event)"
+    (blur)="onTouched()"
+  >
+    <option value="" [selected]="!anio()">Año</option>
+    @for (a of anios; track a) {
+      <option [value]="a" [selected]="a === anio()">{{ a }}</option>
+    }
+  </select>
+</div>

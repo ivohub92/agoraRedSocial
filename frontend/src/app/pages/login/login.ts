@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService, mensajeDeError } from '../../core/auth.service';
-import { PASSWORD_PATTERN } from '../../core/validators';
 import { ModalService } from '../../shared/modal/modal.service';
 
 @Component({
@@ -59,8 +58,10 @@ export class Login {
   protected readonly enviando = signal(false);
 
   protected readonly form = inject(FormBuilder).nonNullable.group({
-    identificador: ['', [Validators.required, Validators.minLength(3)]],
-    password: ['', [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
+    // En el login solo se exige completar los campos: mostrar las reglas de la
+    // contraseña (o del usuario) daría pistas a quien intenta adivinar una cuenta.
+    identificador: ['', Validators.required],
+    password: ['', Validators.required],
   });
 
   protected invalido(campo: 'identificador' | 'password'): boolean {

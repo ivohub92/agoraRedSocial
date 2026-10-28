@@ -7,7 +7,9 @@ import {
   PASSWORD_PATTERN,
   coincidenValidator,
   edadMinimaValidator,
+  fechaNoFuturaValidator,
 } from '../../core/validators';
+import { FechaSelect } from '../../shared/fecha-select/fecha-select';
 import { ModalService } from '../../shared/modal/modal.service';
 
 const TIPOS_IMAGEN = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -28,7 +30,7 @@ const CAMPOS_API = [
 
 @Component({
   selector: 'app-registro',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, FechaSelect],
   templateUrl: './registro.html',
   styleUrl: './registro.scss',
 })
@@ -58,7 +60,10 @@ export class Registro implements OnDestroy {
       correo: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
       repetirPassword: ['', Validators.required],
-      fechaNacimiento: ['', [Validators.required, edadMinimaValidator(13)]],
+      fechaNacimiento: [
+        '',
+        [Validators.required, fechaNoFuturaValidator, edadMinimaValidator(13)],
+      ],
       descripcion: ['', Validators.maxLength(200)],
       terminos: [false, Validators.requiredTrue],
     },
