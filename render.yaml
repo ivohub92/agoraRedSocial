@@ -1,0 +1,16 @@
+# Blueprint para desplegar el backend (NestJS) en Render: https://render.com
+services:
+  - type: web
+    name: agora-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
