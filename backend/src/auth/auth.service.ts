@@ -34,13 +34,27 @@ export class AuthService {
     }
 
     const { repetirPassword: _, password, ...datos } = dto;
-    const user = await this.usersService.create({
-      ...datos,
-      fechaNacimiento: new Date(dto.fechaNacimiento),
-      password: await bcrypt.hash(password, SALT_ROUNDS),
-      imagenPerfil: imagen ? await saveImage(imagen) : null,
-    });
-    return user.toJSON();
+    try {
+      const user = await this.usersService.create({
+        ...datos,
+        fechaNacimiento: new Date(dto.fechaNacimiento),
+        password: await bcrypt.hash(password, SALT_ROUNDS),
+        imagenPerfil: imagen ? await saveImage(imagen) : null,
+      });
+      return user.toJSON();
+    } catch (err) {
+      // Dos registros simultáneos con el mismo dato pasan la verificación de arriba,
+      // pero el índice único de MongoDB rechaza el segundo (error 11000): es un 409, no un 500.
+      if ((err as { code?: number }).code === 11000) {
+        const campo = Object.keys((err as { keyPattern?: object }).keyPattern ?? {})[0];
+        throw new ConflictException(
+          campo === 'nombreUsuario'
+            ? 'El nombre de usuario ya está en uso'
+            : 'El correo ya está registrado',
+        );
+      }
+      throw err;
+    }
   }
 
   async login(dto: LoginDto) {
