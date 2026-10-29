@@ -1,23 +1,36 @@
-<header>
-  <a routerLink="/publicaciones" class="brand">Ágora</a>
+<header class="glass-panel">
+  <a routerLink="/publicaciones" class="brand">
+    <img src="logo.svg" alt="" width="34" height="34" />
+    <span><span class="texto-gradiente">ANIME</span>VERSE</span>
+  </a>
 
   <nav>
-    <a routerLink="/publicaciones" routerLinkActive="activo">Publicaciones</a>
-    <a routerLink="/mi-perfil" routerLinkActive="activo">Mi perfil</a>
-    @if (!auth.logueado()) {
-      <a routerLink="/login" routerLinkActive="activo">Ingresar</a>
-      <a routerLink="/registro" routerLinkActive="activo">Registrarse</a>
-    }
+    <a routerLink="/publicaciones" routerLinkActive="activo">
+      <app-icono nombre="inicio" />
+      Publicaciones
+    </a>
+    <a routerLink="/mi-perfil" routerLinkActive="activo">
+      <app-icono nombre="usuario" />
+      Mi perfil
+    </a>
   </nav>
 
   @if (auth.usuario(); as u) {
     <div class="user">
-      <app-avatar [usuario]="u" [size]="36" variante="en-barra" />
       <div class="who">
         {{ u.nombre }} {{ u.apellido[0] }}.
-        <small>&#64;{{ u.nombreUsuario }}</small>
+        <small>&#64;{{ u.nombreUsuario }}{{ u.perfil === 'administrador' ? ' · Admin ★' : '' }}</small>
       </div>
-      <button class="salir" (click)="salir()">Salir</button>
+      <app-avatar [usuario]="u" [size]="36" variante="en-barra" />
+      <button class="salir" (click)="salir()" title="Cerrar sesión">
+        <app-icono nombre="salir" />
+        Salir
+      </button>
+    </div>
+  } @else {
+    <div class="user">
+      <a routerLink="/login" class="btn btn-secondary">Ingresar</a>
+      <a routerLink="/login" [queryParams]="{ tab: 'registro' }" class="btn btn-primary">Registrarse</a>
     </div>
   }
 </header>

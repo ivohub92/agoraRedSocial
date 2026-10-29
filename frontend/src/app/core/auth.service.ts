@@ -47,6 +47,7 @@ export class AuthService {
   }
 }
 
+/** Convierte un error HTTP en un mensaje legible para mostrar en un modal. */
 export function mensajeDeError(err: unknown): string {
   if (err instanceof HttpErrorResponse) {
     if (err.status === 0) {

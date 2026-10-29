@@ -1,0 +1,57 @@
+<form class="form-stack" [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+  <div class="field">
+    <label for="identificador">Usuario o correo</label>
+    <div class="con-icono">
+      <app-icono nombre="usuario" />
+      <input
+        id="identificador"
+        class="input"
+        formControlName="identificador"
+        autocomplete="username"
+        placeholder="tu_usuario o tu@correo.com"
+        [class.invalid]="invalido('identificador')"
+      />
+    </div>
+    @if (invalido('identificador')) {
+      <div class="error">Ingresá tu correo o nombre de usuario.</div>
+    }
+  </div>
+
+  <div class="field">
+    <label for="password">Contraseña</label>
+    <div class="con-icono">
+      <app-icono nombre="candado" />
+      <input
+        id="password"
+        class="input"
+        [type]="verPassword() ? 'text' : 'password'"
+        formControlName="password"
+        autocomplete="current-password"
+        placeholder="••••••••••••"
+        [class.invalid]="invalido('password')"
+      />
+      <button
+        type="button"
+        class="ojo"
+        [attr.aria-label]="verPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        [attr.aria-pressed]="verPassword()"
+        (click)="verPassword.set(!verPassword())"
+      >
+        <app-icono [nombre]="verPassword() ? 'ojo-tachado' : 'ojo'" />
+      </button>
+    </div>
+    @if (invalido('password')) {
+      <div class="error">Ingresá tu contraseña.</div>
+    }
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-block" [disabled]="enviando()">
+    <span>{{ enviando() ? 'Entrando…' : 'Entrar a la red' }}</span>
+    <app-icono nombre="flecha-der" />
+  </button>
+
+  <p class="cambiar">
+    ¿Todavía no tenés cuenta?
+    <button type="button" class="link" (click)="irARegistro.emit()">Registrate</button>
+  </p>
+</form>

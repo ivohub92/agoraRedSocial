@@ -1,0 +1,25 @@
+<!-- Emblema de AnimeVerse (TV cyberpunk) -->
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" rx="28" fill="#0d0f18"/>
+    <rect x="5" y="5" width="90" height="90" rx="24" stroke="url(#logo-grad)" stroke-width="3"/>
+    
+    <!-- Pantalla TV Anime -->
+    <rect x="20" y="25" width="60" height="50" rx="12" fill="#16192b" stroke="#00f0ff" stroke-width="2"/>
+    
+    <!-- Antenas -->
+    <path d="M35 25 L25 12" stroke="#ff2a85" stroke-width="3" stroke-linecap="round"/>
+    <path d="M65 25 L75 12" stroke="#00f0ff" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="25" cy="12" r="3" fill="#ff2a85"/>
+    <circle cx="75" cy="12" r="3" fill="#00f0ff"/>
+
+    <!-- Play/Star Center Icon -->
+    <polygon points="43,40 43,60 62,50" fill="#ff2a85"/>
+
+    <defs>
+        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff2a85"/>
+            <stop offset="50%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#00f0ff"/>
+        </linearGradient>
+    </defs>
+</svg>

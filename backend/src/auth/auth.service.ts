@@ -43,7 +43,8 @@ export class AuthService {
       });
       return user.toJSON();
     } catch (err) {
-
+      // Dos registros simultáneos con el mismo dato pasan la verificación de arriba,
+      // pero el índice único de MongoDB rechaza el segundo (error 11000): es un 409, no un 500.
       if ((err as { code?: number }).code === 11000) {
         const campo = Object.keys((err as { keyPattern?: object }).keyPattern ?? {})[0];
         throw new ConflictException(
@@ -58,7 +59,7 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const user = await this.usersService.findByIdentificador(dto.identificador);
-
+    // bcrypt.compare encripta la contraseña recibida con el salt guardado y compara los hashes.
     if (!user || !(await bcrypt.compare(dto.password, user.password))) {
       throw new UnauthorizedException('Usuario o contraseña incorrectos');
     }

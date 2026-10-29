@@ -1,5 +1,16 @@
+<!-- Fondo del tema: grilla de puntos, esferas de luz neón y líneas de escáner. -->
+<div class="fondo" aria-hidden="true">
+  <div class="grilla"></div>
+  <div class="orbe rosa"></div>
+  <div class="orbe cyan"></div>
+  <div class="orbe violeta"></div>
+  <div class="scanlines"></div>
+</div>
+
 @if (mostrarNavbar()) {
   <app-navbar />
 }
-<router-outlet />
+<div class="contenido">
+  <router-outlet />
+</div>
 <app-modal />

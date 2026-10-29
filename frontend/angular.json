@@ -52,7 +52,7 @@
               }
             ],
             "styles": [
-              "src/styles/modernist.css",
+              "src/styles/animeverse.css",
               "src/styles.scss"
             ]
           },
@@ -66,7 +66,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
+                  "maximumWarning": "6kB",
                   "maximumError": "8kB"
                 }
               ],

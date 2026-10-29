@@ -1,3 +1,5 @@
+// Capa de la aplicación sobre el tema AnimeVerse (src/styles/animeverse.css).
+// Usar siempre sus variables: paneles de vidrio, bordes de 1px y brillos neón.
 
 html,
 body {
@@ -5,11 +7,10 @@ body {
 }
 
 a {
-  color: var(--color-accent-700);
+  color: var(--anime-cyan);
   text-decoration: none;
 
   &:hover {
-    color: var(--color-accent-600);
     text-decoration: underline;
   }
 }
@@ -21,37 +22,140 @@ a {
   padding: 0;
   font: inherit;
   font-weight: 600;
-  color: var(--color-accent-700);
+  color: var(--anime-cyan);
   cursor: pointer;
-  text-decoration: underline;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
+.muted {
+  color: var(--color-neutral-700);
+}
+
+// Pastilla con punto titilante ("Desktop Web App" en el diseño).
 .kicker {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: var(--color-accent-700);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 12px;
   margin-bottom: 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 42, 133, 0.3);
+  background: rgba(255, 42, 133, 0.1);
+  color: var(--anime-pink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  &.cyan {
+    border-color: rgba(0, 240, 255, 0.3);
+    background: rgba(0, 240, 255, 0.08);
+    color: var(--anime-cyan);
+  }
+}
+
+.punto {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: currentColor;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
 }
 
 .rule {
-  height: 2px;
-  background: var(--color-divider);
+  height: 1px;
+  background: #1e293b;
   margin: 6px 0;
+}
+
+// ---------- Fondo animado (grilla de puntos, esferas de luz y scanlines) ----------
+.fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  .grilla {
+    position: absolute;
+    inset: 0;
+    opacity: 0.4;
+    background-image: radial-gradient(#3b82f6 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .orbe {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(140px);
+    animation: pulse-glow 3s infinite alternate;
+
+    &.rosa {
+      top: 25%;
+      left: 25%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 42, 133, 0.2);
+    }
+
+    &.cyan {
+      bottom: 25%;
+      right: 25%;
+      transform: translate(50%, 50%);
+      background: rgba(0, 240, 255, 0.2);
+    }
+
+    &.violeta {
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      transform: translate(-50%, -50%);
+      filter: blur(160px);
+      animation: none;
+      background: rgba(139, 92, 246, 0.15);
+    }
+  }
+
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    opacity: 0.25;
+  }
+}
+
+// Todo el contenido va por encima del fondo.
+app-navbar,
+.contenido {
+  position: relative;
+  z-index: 1;
 }
 
 // ---------- Formularios ----------
 .form-stack {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .row-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
 
   @media (max-width: 560px) {
     grid-template-columns: minmax(0, 1fr);
@@ -59,15 +163,6 @@ a {
 }
 
 .field {
-  > label {
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--color-text);
-    margin-bottom: 6px;
-  }
-
   .hint,
   .error {
     font-size: 12px;
@@ -75,7 +170,7 @@ a {
   }
 
   .hint {
-    color: var(--color-neutral-700);
+    color: var(--color-neutral-600);
   }
 
   .error {
@@ -85,166 +180,105 @@ a {
 }
 
 .input.invalid {
-  border-color: var(--color-accent);
-  box-shadow: inset 0 0 0 1px var(--color-accent);
+  border-color: var(--anime-pink);
+  box-shadow: var(--glow-pink);
+}
+
+// Campo con ícono a la izquierda y botón opcional a la derecha (ojo de la contraseña).
+.con-icono {
+  position: relative;
+
+  > app-icono {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #64748b;
+    pointer-events: none;
+  }
+
+  .input {
+    padding-left: 40px;
+  }
+
+  .input:has(+ .ojo) {
+    padding-right: 42px;
+  }
+
+  .ojo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    border: 0;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+
+    &:hover {
+      color: #cbd5e1;
+    }
+  }
 }
 
 .check {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.5;
+  color: var(--color-neutral-700);
   cursor: pointer;
 
   input {
     width: 16px;
     height: 16px;
-    margin: 3px 0 0;
-    accent-color: var(--color-accent);
-  }
-}
-
-.switch-line {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  flex-wrap: wrap;
-  font-size: 14px;
-
-  span {
-    color: var(--color-neutral-800);
-  }
-
-  a {
-    font-weight: 600;
-  }
-}
-
-// ---------- Pantallas de acceso (login / registro) ----------
-.auth {
-  display: grid;
-  min-height: 100vh;
-}
-
-.auth-form {
-  padding: 56px 56px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  h1 {
-    font-size: clamp(32px, 3.4vw, 44px);
-    margin: 0 0 8px;
-  }
-
-  .lead {
-    margin: 0 0 28px;
-    color: var(--color-neutral-800);
-    max-width: 42ch;
-  }
-}
-
-.poster {
-  background: var(--color-accent);
-  color: #fff;
-  padding: 56px 56px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 40px;
-
-  .brand {
-    font-size: 13px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    font-weight: 800;
-  }
-
-  .headline {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    text-wrap: pretty;
-  }
-
-  .white-rule {
-    height: 2px;
-    background: #fff;
-    margin: 28px 0 20px;
-    max-width: 340px;
-  }
-
-  .foot {
-    border-top: 2px solid #fff;
-    padding-top: 16px;
-  }
-}
-
-@media (max-width: 900px) {
-  .auth {
-    grid-template-columns: minmax(0, 1fr) !important;
-  }
-
-  .auth-form,
-  .poster {
-    padding: 32px 16px;
-  }
-
-  .poster {
-    order: 2;
+    margin: 2px 0 0;
+    accent-color: var(--anime-pink);
   }
 }
 
 // ---------- Pantallas con columnas (publicaciones / perfil) ----------
 .cols {
   display: grid;
+  gap: 24px;
   align-items: start;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.side,
+.panel {
+  background: rgba(22, 25, 43, 0.75);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 24px;
 }
 
 .side {
-  background: var(--color-surface);
-  padding: 24px;
   position: sticky;
-  top: 64px;
-  min-height: calc(100vh - 64px);
-
-  &.left {
-    border-right: 2px solid var(--color-text);
-  }
-
-  &.right {
-    border-left: 2px solid var(--color-text);
-  }
+  top: 88px;
 }
 
 .col-main {
-  background: var(--color-neutral-100);
-  padding: 24px;
   min-width: 0;
-  min-height: calc(100vh - 64px);
 }
 
 @media (max-width: 900px) {
   .cols {
     grid-template-columns: minmax(0, 1fr) !important;
+    padding: 16px;
+    gap: 16px;
   }
 
   .side {
     position: static;
-    min-height: 0;
-    padding: 24px 16px;
-
-    &.left,
-    &.right {
-      border: 0;
-      border-bottom: 2px solid var(--color-text);
-    }
-  }
-
-  .col-main {
-    min-height: 0;
-    padding: 24px 16px;
   }
 }
 
@@ -255,16 +289,17 @@ a {
   margin-bottom: 16px;
 
   .title {
-    font-size: 11px;
-    letter-spacing: 0.18em;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    font-weight: 600;
   }
 
   .line {
     flex: 1;
-    height: 2px;
-    background: var(--color-text);
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255, 42, 133, 0.5), rgba(0, 240, 255, 0.3), transparent);
   }
 
   .meta {
@@ -274,42 +309,53 @@ a {
 }
 
 .side-title {
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-weight: 600;
-  border-bottom: 2px solid var(--color-text);
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+  color: var(--anime-cyan);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #1e293b;
 }
 
 .stats {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(0, 1fr);
-  border-top: 2px solid var(--color-divider);
-  border-bottom: 2px solid var(--color-divider);
-  padding: 12px 0;
+  gap: 8px;
+  padding: 14px 0;
   margin-bottom: 16px;
+  border-top: 1px solid #1e293b;
+  text-align: center;
 
   .num {
     font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: 18px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--anime-cyan);
+  }
+
+  > :nth-child(2) .num {
+    color: var(--anime-pink);
+  }
+
+  > :nth-child(3) .num {
+    color: #c084fc;
   }
 
   .lbl {
     font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
     color: var(--color-neutral-700);
   }
 }
 
 .empty {
-  border: 2px solid var(--color-text);
-  background: var(--color-bg);
-  padding: 24px;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(0, 240, 255, 0.35);
+  background: rgba(15, 23, 42, 0.6);
 
   h3 {
     margin: 0 0 8px;
@@ -317,11 +363,67 @@ a {
 
   p {
     margin: 0 0 16px;
-    color: var(--color-neutral-800);
+    color: var(--color-neutral-700);
     max-width: 52ch;
   }
 
   > :last-child {
     margin-bottom: 0;
+  }
+}
+
+// Línea "¿Todavía no tenés cuenta? Registrate" al pie de cada pestaña de acceso.
+.cambiar {
+  margin: 4px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-neutral-700);
+}
+
+// ---------- Paneles compartidos por el feed y el perfil ----------
+// Título chico en mayúsculas arriba de cada panel lateral.
+.panel-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+// Panel de KIRA-BOT con un consejo.
+.kira {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-color: rgba(0, 240, 255, 0.3);
+  background: linear-gradient(135deg, var(--anime-card), #0f172a);
+
+  img {
+    flex: none;
+    padding: 3px;
+    border-radius: 50%;
+    border: 1px solid var(--anime-cyan);
+    background: #020617;
+  }
+
+  .kira-nombre {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--anime-cyan);
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #cbd5e1;
   }
 }

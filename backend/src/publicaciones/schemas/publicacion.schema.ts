@@ -6,7 +6,7 @@ export type PublicacionDocument = HydratedDocument<Publicacion>;
 
 @Schema({ timestamps: true })
 export class Publicacion {
-  @Prop({ type: Types.ObjectId, ref: User.name, required: true })
+  @Prop({ type: Types.ObjectId, ref: User.name, required: true, index: true })
   usuario: Types.ObjectId;
 
   @Prop({ required: true, trim: true })
@@ -18,11 +18,21 @@ export class Publicacion {
   @Prop({ type: String, default: null })
   imagen: string | null;
 
+  /** Usuarios que dieron me gusta (cada uno a lo sumo una vez). */
   @Prop({ type: [{ type: Types.ObjectId, ref: User.name }], default: [] })
   meGusta: Types.ObjectId[];
 
+  /** Contador de me gusta, para poder ordenar por popularidad con un índice. */
+  @Prop({ default: 0 })
+  cantidadMeGusta: number;
+
+  /** Baja lógica: una publicación eliminada queda en la base con activa = false. */
   @Prop({ default: true })
   activa: boolean;
+
+  createdAt: Date;
 }
 
 export const PublicacionSchema = SchemaFactory.createForClass(Publicacion);
+PublicacionSchema.index({ activa: 1, createdAt: -1 });
+PublicacionSchema.index({ activa: 1, cantidadMeGusta: -1, createdAt: -1 });

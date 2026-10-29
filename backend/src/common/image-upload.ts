@@ -8,10 +8,17 @@ import { memoryStorage } from 'multer';
 
 export const UPLOADS_DIR = join(process.cwd(), 'uploads');
 
-
+/**
+ * Si está definida CLOUDINARY_URL (cloudinary://API_KEY:API_SECRET@CLOUD_NAME) las imágenes
+ * se suben a Cloudinary; si no, se guardan en /uploads. En Render conviene Cloudinary,
+ * porque el disco del plan gratuito se borra en cada deploy.
+ */
 export const usaCloudinary = () => Boolean(process.env.CLOUDINARY_URL);
 
-
+/**
+ * La imagen se mantiene en memoria y solo se guarda cuando el resto
+ * de los datos ya fueron validados (así no quedan archivos huérfanos).
+ */
 export const imageUploadOptions: MulterOptions = {
   storage: memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
@@ -26,7 +33,7 @@ export const imageUploadOptions: MulterOptions = {
   },
 };
 
-
+/** Guarda la imagen (en Cloudinary o en disco) y devuelve su URL pública. */
 export async function saveImage(
   file: Express.Multer.File,
   carpeta = 'perfiles',
@@ -56,7 +63,10 @@ function subirACloudinary(file: Express.Multer.File, carpeta: string): Promise<s
   });
 }
 
-
+/**
+ * URL pública del backend: PUBLIC_URL si está definida; en Render se usa la que
+ * provee automáticamente (RENDER_EXTERNAL_URL); en local, localhost.
+ */
 function urlPublica(): string {
   return (
     process.env.PUBLIC_URL ??

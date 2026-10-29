@@ -1,0 +1,244 @@
+:host {
+  display: flex;
+  min-height: 100vh;
+  padding: 32px;
+
+  @media (max-width: 560px) {
+    padding: 12px;
+  }
+}
+
+// Tarjeta horizontal de 12 columnas: 5 de presentación y 7 de formularios.
+.acceso {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  width: 100%;
+  max-width: 1024px;
+  min-height: 580px;
+  margin: auto;
+  overflow: hidden;
+  border-color: #1e293b;
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// ---------- Lado izquierdo ----------
+.presentacion {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 40px;
+  background: rgba(15, 23, 42, 0.6);
+  border-right: 1px solid rgba(30, 41, 59, 0.8);
+
+  @media (max-width: 900px) {
+    order: 2;
+    padding: 28px 20px;
+    border-right: 0;
+    border-top: 1px solid rgba(30, 41, 59, 0.8);
+  }
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: clamp(26px, 2.8vw, 32px);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+
+.descripcion {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-neutral-700);
+}
+
+.mascota {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .circulo {
+    position: relative;
+    width: 168px;
+    height: 168px;
+    animation: float 6s ease-in-out infinite;
+
+    img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+
+    // La foto del usuario no trae anillos como la mascota: se le pone un borde neón.
+    img.usuario {
+      border: 3px solid var(--anime-cyan);
+      box-shadow: var(--glow-cyan), inset 0 0 0 2px var(--anime-pink);
+    }
+  }
+
+  // La mascota oficial ya trae sus anillos neón; acá solo se suma el brillo de fondo.
+  .brillo {
+    position: absolute;
+    border-radius: 50%;
+    inset: 0;
+    background: linear-gradient(45deg, var(--anime-pink), var(--anime-cyan));
+    opacity: 0.2;
+    filter: blur(16px);
+    transition: opacity 0.3s;
+  }
+
+  .circulo:hover .brillo {
+    opacity: 0.4;
+  }
+
+  .mini {
+    margin-top: 12px;
+    font-family: var(--font-heading);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-neutral-700);
+  }
+
+  .nombre {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--anime-cyan);
+  }
+}
+
+.hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+
+  span {
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #1e293b;
+    background: rgba(2, 6, 23, 0.8);
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  .rosa {
+    color: var(--anime-pink);
+  }
+
+  .cyan {
+    color: var(--anime-cyan);
+  }
+
+  .violeta {
+    color: #c084fc;
+  }
+}
+
+.stats {
+  margin: 0;
+  padding-bottom: 0;
+
+  .num {
+    font-size: 12px;
+  }
+}
+
+// ---------- Lado derecho ----------
+.formularios {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+
+  @media (max-width: 560px) {
+    padding: 24px 16px;
+  }
+}
+
+.pestanas {
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  margin-bottom: 24px;
+  border-radius: 16px;
+  border: 1px solid #1e293b;
+  background: rgba(15, 23, 42, 0.8);
+
+  button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 8px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #94a3b8;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      color: #fff;
+    }
+
+    &.activa {
+      color: #fff;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    }
+
+    &.login.activa {
+      background: var(--gradiente-login);
+    }
+
+    &.registro.activa {
+      background: var(--gradiente-registro);
+    }
+  }
+}
+
+// Cada vez que cambia la pestaña el contenido se vuelve a crear y entra con esta animación.
+.panel-pestana > * {
+  animation: aparecer 0.35s ease-out both;
+}
+
+.encabezado {
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 20px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--color-neutral-700);
+  }
+}

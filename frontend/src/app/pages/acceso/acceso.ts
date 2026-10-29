@@ -1,0 +1,40 @@
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { Icono } from '../../shared/icono/icono';
+import { LoginForm } from './login-form/login-form';
+import { RegistroForm } from './registro-form/registro-form';
+
+export type Pestana = 'login' | 'registro';
+
+/**
+ * Página única de acceso: "Iniciar sesión" y "Registrarse" son dos pestañas.
+ * La pestaña activa viaja en la URL (/login?tab=registro) para poder enlazarla.
+ */
+@Component({
+  selector: 'app-acceso',
+  imports: [Icono, LoginForm, RegistroForm],
+  templateUrl: './acceso.html',
+  styleUrl: './acceso.scss',
+})
+export class Acceso {
+  private readonly router = inject(Router);
+
+  /** Query param ?tab=… (llega por withComponentInputBinding). */
+  readonly tab = input<string>();
+
+  protected readonly pestana = computed<Pestana>(() =>
+    this.tab() === 'registro' ? 'registro' : 'login',
+  );
+
+  /** Foto elegida en el registro: reemplaza a la mascota del panel izquierdo. */
+  protected readonly fotoElegida = signal<string | null>(null);
+
+  protected cambiar(pestana: Pestana): void {
+    if (pestana === this.pestana()) return;
+    this.fotoElegida.set(null);
+    this.router.navigate([], {
+      queryParams: { tab: pestana === 'registro' ? 'registro' : null },
+      replaceUrl: true,
+    });
+  }
+}

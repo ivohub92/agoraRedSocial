@@ -1,60 +1,166 @@
 <div class="cols">
   <aside class="side left">
     @if (auth.usuario(); as u) {
-      <app-avatar class="foto" [usuario]="u" variante="propio" />
-      <h4>{{ u.nombre }} {{ u.apellido }}</h4>
-      <div class="handle">
-        &#64;{{ u.nombreUsuario }}
-        <span class="tag" [class]="u.perfil === 'administrador' ? 'tag-accent' : 'tag-outline'">
-          {{ u.perfil === 'administrador' ? 'Administrador' : 'Usuario' }}
-        </span>
+      <div class="panel yo">
+        <div class="fila">
+          <app-avatar [usuario]="u" [size]="48" variante="propio" />
+          <div class="datos">
+            <div class="nombre">{{ u.nombre }} {{ u.apellido }}</div>
+            <div class="handle">&#64;{{ u.nombreUsuario }}</div>
+          </div>
+          <span class="tag" [class]="u.perfil === 'administrador' ? 'tag-accent' : 'tag-outline'">
+            {{ u.perfil === 'administrador' ? 'Admin' : 'Usuario' }}
+          </span>
+        </div>
+        @if (u.descripcion) {
+          <p class="bio">{{ u.descripcion }}</p>
+        }
+        <div class="stats">
+          <div><div class="num">{{ edad() }}</div><div class="lbl">Años</div></div>
+          <div><div class="num">{{ u.createdAt | date: 'yyyy' }}</div><div class="lbl">Desde</div></div>
+        </div>
       </div>
-      @if (u.descripcion) {
-        <p class="bio">{{ u.descripcion }}</p>
-      }
-      <div class="stats">
-        <div><div class="num">{{ edad() }}</div><div class="lbl">Años</div></div>
-        <div><div class="num">{{ u.createdAt | date: 'yyyy' }}</div><div class="lbl">Desde</div></div>
-      </div>
-      <a routerLink="/mi-perfil" class="btn btn-secondary btn-block">Ver mi perfil</a>
     } @else {
-      <div class="kicker">Sin sesión</div>
-      <h4>Entrá a Ágora</h4>
-      <p class="bio">Iniciá sesión o creá una cuenta para ver tu perfil y publicar.</p>
-      <a routerLink="/login" class="btn btn-primary btn-block">Iniciar sesión</a>
-      <a routerLink="/registro" class="btn btn-ghost btn-block">Crear una cuenta</a>
+      <div class="panel">
+        <div class="kicker"><span class="punto"></span>Sin sesión</div>
+        <h4>Entrá a AnimeVerse</h4>
+        <p class="bio">Iniciá sesión o creá una cuenta para ver tu perfil y publicar.</p>
+        <a routerLink="/login" class="btn btn-primary btn-block">Iniciar sesión</a>
+        <a routerLink="/login" [queryParams]="{ tab: 'registro' }" class="btn btn-ghost btn-block">Crear una cuenta</a>
+      </div>
     }
+
+    <nav class="panel menu" aria-label="Navegación">
+      <div class="panel-titulo">Navegación</div>
+      <a routerLink="/publicaciones" class="activo">
+        <app-icono nombre="grilla" class="rosa" />
+        Feed principal
+      </a>
+      <a routerLink="/mi-perfil">
+        <app-icono nombre="usuario" class="cyan" />
+        Mi perfil
+      </a>
+      @if (auth.logueado()) {
+        <button type="button" (click)="salir()">
+          <app-icono nombre="salir" class="naranja" />
+          Cerrar sesión
+        </button>
+      }
+    </nav>
+
+    <div class="panel kira">
+      <img src="mascota.svg" alt="" width="52" height="52" />
+      <div>
+        <div class="kira-nombre">KIRA-BOT</div>
+        <p>“{{ consejo }}”</p>
+      </div>
+    </div>
   </aside>
 
   <main class="col-main">
+    <app-nueva-publicacion (publicada)="alPublicar()" />
+
     <div class="section-head">
-      <div class="title">Tu cronología</div>
+      <div class="title">Feed de la comunidad</div>
       <div class="line"></div>
-      <div class="meta">Más recientes</div>
+      <div class="seg" role="radiogroup" aria-label="Ordenar publicaciones">
+        <label class="seg-opt">
+          <input type="radio" name="orden" value="fecha" [checked]="orden() === 'fecha'" (change)="cambiarOrden('fecha')" />
+          Más recientes
+        </label>
+        <label class="seg-opt">
+          <input type="radio" name="orden" value="meGusta" [checked]="orden() === 'meGusta'" (change)="cambiarOrden('meGusta')" />
+          Más me gusta
+        </label>
+      </div>
     </div>
 
-    <div class="empty">
-      <div class="kicker">Cronología vacía</div>
-      <h3>Todavía no hay publicaciones</h3>
-      <p>
-        Acá vas a ver lo que publica la comunidad, ordenado por fecha. Vas a poder dar “Me gusta” y
-        comentar cada publicación.
-      </p>
-    </div>
+    @if (error(); as mensaje) {
+      <div class="empty">
+        <div class="kicker"><span class="punto"></span>Error</div>
+        <h3>No se pudieron cargar las publicaciones</h3>
+        <p>{{ mensaje }}</p>
+        <button class="btn btn-primary" (click)="cargar()">Reintentar</button>
+      </div>
+    } @else if (pagina(); as datos) {
+      @if (datos.total === 0) {
+        <div class="empty">
+          <div class="kicker cyan"><span class="punto"></span>Feed vacío</div>
+          <h3>Todavía no hay publicaciones</h3>
+          <p>
+            @if (auth.logueado()) {
+              Escribí la primera usando el cuadro de arriba.
+            } @else {
+              Iniciá sesión para publicar, dar “Me gusta” y eliminar tus publicaciones.
+            }
+          </p>
+        </div>
+      } @else {
+        <div class="lista" [class.cargando]="cargando()" [attr.aria-busy]="cargando()">
+          @for (p of datos.items; track p._id; let i = $index) {
+            <app-publicacion
+              [publicacion]="p"
+              [acento]="i % 2 === 0 ? 'rosa' : 'cyan'"
+              (eliminada)="alEliminar()"
+              (meGustaCambio)="alCambiarMeGusta()"
+            />
+          }
+        </div>
+
+        <nav class="paginado" aria-label="Paginado de publicaciones">
+          <button class="btn btn-secondary" [disabled]="numeroPagina() === 0 || cargando()" (click)="irAPagina(numeroPagina() - 1)">
+            <app-icono nombre="flecha-izq" [tam]="14" /> Anterior
+          </button>
+          <span class="info">
+            Página {{ numeroPagina() + 1 }} de {{ totalPaginas() }}
+            <small>{{ datos.offset + 1 }}–{{ datos.offset + datos.items.length }} de {{ datos.total }}</small>
+          </span>
+          <button class="btn btn-secondary" [disabled]="numeroPagina() + 1 >= totalPaginas() || cargando()" (click)="irAPagina(numeroPagina() + 1)">
+            Siguiente <app-icono nombre="flecha-der" [tam]="14" />
+          </button>
+        </nav>
+      }
+    } @else {
+      <p class="muted cargando-texto">Cargando publicaciones…</p>
+    }
   </main>
 
   <aside class="side right">
-    <div class="side-title">Normas de convivencia</div>
-    <ol>
-      <li><b>01</b><span>Publicá con tu nombre: las cuentas son personales.</span></li>
-      <li><b>02</b><span>Discutí ideas, no personas.</span></li>
-      <li><b>03</b><span>Las imágenes tienen que ser tuyas o tener permiso.</span></li>
-    </ol>
-    <div class="pie">
-      Ágora · 2026
-      @if (auth.logueado()) {
-        <br /><button class="link" (click)="salir()">Cerrar sesión</button>
+    <div class="panel">
+      <div class="panel-titulo con-icono-der">
+        Top más gustadas
+        <app-icono nombre="tendencia" class="cyan" />
+      </div>
+      @if (top().length) {
+        <ol class="ranking">
+          @for (p of top(); track p._id; let i = $index) {
+            <li>
+              <span class="puesto">#{{ i + 1 }}</span>
+              <div>
+                <div class="titulo">{{ p.titulo }}</div>
+                <div class="detalle">
+                  ★ {{ p.cantidadMeGusta }} me gusta · &#64;{{ p.usuario.nombreUsuario }}
+                </div>
+              </div>
+            </li>
+          }
+        </ol>
+      } @else {
+        <p class="muted vacio">Todavía nadie dio me gusta. ¡Sé el primero!</p>
       }
+    </div>
+
+    <div class="panel">
+      <div class="panel-titulo con-icono-der">
+        Normas de convivencia
+        <app-icono nombre="escudo" class="rosa" />
+      </div>
+      <ol class="ranking normas">
+        <li><span class="puesto">01</span><span>Nada de spoilers sin avisar en el título.</span></li>
+        <li><span class="puesto">02</span><span>Debatí obras, no personas: el respeto va primero.</span></li>
+        <li><span class="puesto">03</span><span>Las imágenes tienen que ser tuyas o con créditos al autor.</span></li>
+      </ol>
+      <div class="pie">AnimeVerse · 2026</div>
     </div>
   </aside>
 </div>

@@ -17,7 +17,7 @@ import { RegisterDto } from './dto/register.dto.js';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-
+  /** POST /auth/registro (multipart/form-data, campo de archivo: "imagenPerfil") → 201 */
   @Post('registro')
   @UseInterceptors(FileInterceptor('imagenPerfil', imageUploadOptions))
   register(

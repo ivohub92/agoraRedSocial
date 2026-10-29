@@ -11,6 +11,10 @@ export class UsersService {
     return this.userModel.create(data);
   }
 
+  findById(id: string): Promise<UserDocument | null> {
+    return this.userModel.findById(id).exec();
+  }
+
   existsByCorreoOrNombreUsuario(correo: string, nombreUsuario: string) {
     return this.userModel
       .findOne({ $or: [{ correo: correo.toLowerCase() }, { nombreUsuario }] })
@@ -18,7 +22,7 @@ export class UsersService {
       .lean();
   }
 
-
+  /** Busca por correo o por nombre de usuario (el login acepta cualquiera de los dos). */
   findByIdentificador(identificador: string): Promise<UserDocument | null> {
     return this.userModel
       .findOne({

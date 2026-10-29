@@ -4,18 +4,28 @@
   gap: 8px;
 }
 
-
+// Desplegables con el mismo aspecto que los .input del tema y una flecha dibujada en CSS.
 select.input {
   appearance: none;
   cursor: pointer;
   padding-right: 28px;
-  border-radius: 0;
+  font-size: 13px;
+  color: #cbd5e1;
   background-image:
-    linear-gradient(45deg, transparent 50%, var(--color-text) 50%),
-    linear-gradient(135deg, var(--color-text) 50%, transparent 50%);
+    linear-gradient(45deg, transparent 50%, var(--anime-cyan) 50%),
+    linear-gradient(135deg, var(--anime-cyan) 50%, transparent 50%);
   background-position:
     right 14px center,
     right 9px center;
   background-size: 5px 5px;
   background-repeat: no-repeat;
+
+  &:focus-visible {
+    border-color: var(--anime-cyan);
+    box-shadow: 0 0 0 1px var(--anime-cyan);
+  }
+
+  option {
+    background: #0f172a;
+  }
 }

@@ -1,32 +1,51 @@
-
+// Usa .dialog-backdrop / .dialog del tema; el borde y el ícono toman el color del tipo.
 .dialog-backdrop {
   z-index: 1000;
+  animation: aparecer 0.2s ease-out;
 }
 
 .dialog {
-  border: 2px solid var(--color-text);
-  border-top: 8px solid var(--color-text);
-  background: var(--color-bg);
-  box-shadow: none;
-  padding: 24px;
-  gap: 8px;
+  gap: 10px;
+
+  &.exito {
+    border-color: var(--anime-cyan);
+    box-shadow: var(--shadow-lg), var(--glow-cyan);
+
+    .icono {
+      color: var(--anime-cyan);
+      background: rgba(0, 240, 255, 0.1);
+    }
+  }
 
   &.error {
-    border-top-color: var(--color-accent);
+    border-color: var(--anime-pink);
+    box-shadow: var(--shadow-lg), var(--glow-pink);
+
+    .icono {
+      color: var(--anime-pink);
+      background: rgba(255, 42, 133, 0.1);
+    }
   }
 }
 
-.kicker {
-  margin-bottom: 0;
-}
+.cabeza {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-.dialog-title {
-  font-size: 25px;
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  .icono {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .kicker {
+    margin: 0;
+  }
 }
 
 .dialog-body {
   white-space: pre-line;
-  font-size: 15px;
 }

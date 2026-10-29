@@ -19,9 +19,38 @@ export interface LoginRequest {
   password: string;
 }
 
-
+/** Forma de los errores que devuelve NestJS. */
 export interface ApiError {
   statusCode: number;
   message: string | string[];
   error?: string;
+}
+
+/** Datos del autor que vienen junto a cada publicación. */
+export type Autor = Pick<Usuario, '_id' | 'nombre' | 'apellido' | 'nombreUsuario' | 'imagenPerfil'>;
+
+export interface Publicacion {
+  _id: string;
+  titulo: string;
+  mensaje: string;
+  imagen: string | null;
+  usuario: Autor;
+  cantidadMeGusta: number;
+  /** Si el usuario que consulta ya le dio me gusta. */
+  meGustaPorMi: boolean;
+  createdAt: string;
+}
+
+export type OrdenPublicaciones = 'fecha' | 'meGusta';
+
+export interface PaginaPublicaciones {
+  items: Publicacion[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export interface EstadoMeGusta {
+  cantidadMeGusta: number;
+  meGustaPorMi: boolean;
 }

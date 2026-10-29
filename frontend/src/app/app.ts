@@ -5,7 +5,7 @@ import { filter, map } from 'rxjs';
 import { Navbar } from './layout/navbar/navbar';
 import { Modal } from './shared/modal/modal';
 
-const RUTAS_SIN_NAVBAR = ['/login', '/registro'];
+const RUTAS_SIN_NAVBAR = ['/login'];
 
 @Component({
   selector: 'app-root',

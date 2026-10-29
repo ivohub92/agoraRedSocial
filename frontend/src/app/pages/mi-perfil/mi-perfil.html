@@ -1,60 +1,147 @@
 @if (auth.usuario(); as u) {
-  <div class="cols">
-    <aside class="side left">
-      <app-avatar class="foto" [usuario]="u" variante="propio" />
-      <h2>{{ u.nombre }} {{ u.apellido }}</h2>
-      <div class="handle">
-        &#64;{{ u.nombreUsuario }}
-        <span class="tag" [class]="u.perfil === 'administrador' ? 'tag-accent' : 'tag-outline'">
-          {{ u.perfil === 'administrador' ? 'Administrador' : 'Usuario' }}
-        </span>
-      </div>
-      @if (u.descripcion) {
-        <p class="bio">{{ u.descripcion }}</p>
-      }
-      <div class="stats">
-        <div><div class="num">{{ edad() }}</div><div class="lbl">Años</div></div>
-        <div><div class="num">{{ u.createdAt | date: 'yyyy' }}</div><div class="lbl">Desde</div></div>
-      </div>
-      <a routerLink="/publicaciones" class="btn btn-secondary btn-block">Ir a la cronología</a>
-    </aside>
+  <div class="perfil">
+    <!-- Portada, foto y datos principales -->
+    <section class="cabecera glass-panel">
+      <div class="portada"></div>
 
-    <main class="col-main">
-      <div class="section-head">
-        <div class="title">Datos de la cuenta</div>
-        <div class="line"></div>
-        <div class="meta">Miembro desde {{ u.createdAt | date: 'MMMM yyyy' }}</div>
-      </div>
+      <div class="identidad">
+        <div class="foto-y-datos">
+          <div class="foto">
+            <app-avatar [usuario]="u" [size]="112" variante="propio" />
+            <span class="en-linea" title="En línea"></span>
+          </div>
+          <div class="datos">
+            <div class="nombre-linea">
+              <h1>{{ u.nombre }} {{ u.apellido }}</h1>
+              <span class="chip rosa">{{ u.perfil === 'administrador' ? 'ADMINISTRADOR' : 'USUARIO' }}</span>
+              <span class="chip cyan">&#64;{{ u.nombreUsuario }}</span>
+            </div>
+            <p class="bio">{{ u.descripcion || 'Todavía no escribiste una descripción.' }}</p>
+            <div class="meta">
+              <span><app-icono nombre="calendario" [tam]="14" class="violeta" /> Miembro desde {{ u.createdAt | date: 'MMM yyyy' }}</span>
+              <span><app-icono nombre="torta" [tam]="14" class="rosa" /> {{ u.fechaNacimiento | date: 'd/MM/yyyy' : 'UTC' }}</span>
+              <span><app-icono nombre="correo" [tam]="14" class="cyan" /> {{ u.correo }}</span>
+            </div>
+          </div>
+        </div>
 
-      <dl>
-        <div><dt>Nombre</dt><dd>{{ u.nombre }}</dd></div>
-        <div><dt>Apellido</dt><dd>{{ u.apellido }}</dd></div>
-        <div><dt>Usuario</dt><dd>&#64;{{ u.nombreUsuario }}</dd></div>
-        <div><dt>Correo</dt><dd>{{ u.correo }}</dd></div>
-        <div><dt>Fecha de nacimiento</dt><dd>{{ u.fechaNacimiento | date: 'd/MM/yyyy' : 'UTC' }}</dd></div>
-        <div><dt>Perfil</dt><dd>{{ u.perfil === 'administrador' ? 'Administrador' : 'Usuario' }}</dd></div>
-        <div class="full"><dt>Descripción</dt><dd>{{ u.descripcion || '—' }}</dd></div>
-      </dl>
-
-      <div class="section-head">
-        <div class="title">Mis publicaciones</div>
-        <div class="line"></div>
-        <div class="meta">0 en total</div>
+        <a routerLink="/publicaciones" class="btn btn-primary">
+          <app-icono nombre="flecha-izq" [tam]="14" />
+          Volver al feed
+        </a>
       </div>
 
-      <div class="empty">
-        <div class="kicker">Sin publicaciones</div>
-        <h3>Todavía no publicaste nada</h3>
-        <p>Cuando publiques, tus últimas publicaciones y sus comentarios van a aparecer acá.</p>
+      <div class="estadisticas">
+        <div><div class="num rosa">{{ mias()?.total ?? '–' }}</div><div class="lbl">Publicaciones</div></div>
+        <div><div class="num cyan">{{ meGustaRecibidos() }}</div><div class="lbl">Me gusta (últimas {{ ultimas }})</div></div>
+        <div><div class="num violeta">{{ edad() }}</div><div class="lbl">Años</div></div>
+        <div><div class="num ambar">{{ u.createdAt | date: 'yyyy' }}</div><div class="lbl">Desde</div></div>
       </div>
-    </main>
+    </section>
+
+    <div class="columnas">
+      <!-- Izquierda: pestañas -->
+      <div class="principal">
+        <div class="pestanas glass-panel" role="tablist" aria-label="Secciones del perfil">
+          <button
+            type="button"
+            role="tab"
+            [class.activa]="pestana() === 'publicaciones'"
+            [attr.aria-selected]="pestana() === 'publicaciones'"
+            (click)="pestana.set('publicaciones')"
+          >
+            <app-icono nombre="documento" />
+            Mis publicaciones ({{ mias()?.total ?? 0 }})
+          </button>
+          <button
+            type="button"
+            role="tab"
+            [class.activa]="pestana() === 'datos'"
+            [attr.aria-selected]="pestana() === 'datos'"
+            (click)="pestana.set('datos')"
+          >
+            <app-icono nombre="usuario" />
+            Datos de la cuenta
+          </button>
+        </div>
+
+        @if (pestana() === 'publicaciones') {
+          @if (error(); as mensaje) {
+            <div class="empty">
+              <div class="kicker"><span class="punto"></span>Error</div>
+              <h3>No se pudieron cargar tus publicaciones</h3>
+              <p>{{ mensaje }}</p>
+              <button class="btn btn-primary" (click)="cargar()">Reintentar</button>
+            </div>
+          } @else if (mias(); as datos) {
+            @if (datos.total === 0) {
+              <div class="empty">
+                <div class="kicker cyan"><span class="punto"></span>Sin publicaciones</div>
+                <h3>Todavía no publicaste nada</h3>
+                <p>Cuando publiques, tus últimas {{ ultimas }} publicaciones van a aparecer acá.</p>
+                <a routerLink="/publicaciones" class="btn btn-primary">Ir a publicar</a>
+              </div>
+            } @else {
+              <div class="lista">
+                @for (p of datos.items; track p._id; let i = $index) {
+                  <app-publicacion
+                    [publicacion]="p"
+                    [acento]="i % 2 === 0 ? 'rosa' : 'cyan'"
+                    (eliminada)="cargar()"
+                    (meGustaCambio)="cargar()"
+                  />
+                }
+              </div>
+              @if (datos.total > datos.items.length) {
+                <p class="muted mas">
+                  Se muestran tus {{ datos.items.length }} publicaciones más recientes de {{ datos.total }}.
+                </p>
+              }
+            }
+          } @else {
+            <p class="muted">Cargando tus publicaciones…</p>
+          }
+        } @else {
+          <dl class="panel datos-cuenta">
+            <div><dt>Nombre</dt><dd>{{ u.nombre }}</dd></div>
+            <div><dt>Apellido</dt><dd>{{ u.apellido }}</dd></div>
+            <div><dt>Usuario</dt><dd>&#64;{{ u.nombreUsuario }}</dd></div>
+            <div><dt>Correo</dt><dd>{{ u.correo }}</dd></div>
+            <div><dt>Fecha de nacimiento</dt><dd>{{ u.fechaNacimiento | date: 'd/MM/yyyy' : 'UTC' }}</dd></div>
+            <div><dt>Perfil</dt><dd>{{ u.perfil === 'administrador' ? 'Administrador' : 'Usuario' }}</dd></div>
+            <div class="full"><dt>Descripción</dt><dd>{{ u.descripcion || '—' }}</dd></div>
+          </dl>
+        }
+      </div>
+
+      <!-- Derecha -->
+      <aside class="lateral">
+        <div class="panel">
+          <div class="panel-titulo">Resumen de la cuenta</div>
+          <ul class="resumen">
+            <li><span>Usuario</span><b class="cyan">&#64;{{ u.nombreUsuario }}</b></li>
+            <li><span>Perfil</span><b class="rosa">{{ u.perfil === 'administrador' ? 'Administrador' : 'Usuario' }}</b></li>
+            <li><span>Edad</span><b>{{ edad() }} años</b></li>
+            <li><span>Alta</span><b>{{ u.createdAt | date: 'd/MM/yyyy' }}</b></li>
+          </ul>
+        </div>
+
+        <div class="panel kira">
+          <img src="mascota.svg" alt="" width="52" height="52" />
+          <div>
+            <div class="kira-nombre">KIRA-BOT</div>
+            <p>“Tu perfil muestra tus últimas {{ ultimas }} publicaciones. ¡Seguí sumando me gusta!”</p>
+          </div>
+        </div>
+      </aside>
+    </div>
   </div>
 } @else {
-  <main class="col-main sin-sesion">
+  <main class="sin-sesion">
     <div class="empty">
-      <div class="kicker">Mi perfil</div>
+      <div class="kicker"><span class="punto"></span>Mi perfil</div>
       <h3>Necesitás iniciar sesión</h3>
-      <p>El contenido de Ágora es privado: iniciá sesión para ver los datos de tu perfil.</p>
+      <p>El contenido de AnimeVerse es privado: iniciá sesión para ver los datos de tu perfil.</p>
       <a routerLink="/login" class="btn btn-primary">Iniciar sesión</a>
     </div>
   </main>

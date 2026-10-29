@@ -1,0 +1,98 @@
+<main class="acceso glass-panel">
+  <section class="presentacion">
+    <div>
+      <div class="kicker"><span class="punto"></span>Red social</div>
+      <h1 class="marca">
+        <img src="logo.svg" alt="" width="44" height="44" />
+        <span><span class="texto-gradiente">ANIME</span>VERSE</span>
+      </h1>
+      <p class="descripcion">
+        Comunidad para debatir, puntuar y compartir reseñas de anime y manga. Publicá, dale me gusta
+        y comentá lo que suben los demás.
+      </p>
+    </div>
+
+    <div class="mascota">
+      <div class="circulo">
+        @if (fotoElegida(); as src) {
+          <img class="usuario" [src]="src" alt="Vista previa de tu imagen de perfil" />
+        } @else {
+          <img src="mascota.svg" alt="KIRA-BOT, la mascota de AnimeVerse" />
+        }
+        <div class="brillo"></div>
+      </div>
+      @if (fotoElegida()) {
+        <span class="mini">Así te van a ver</span>
+        <span class="nombre">TU PERFIL</span>
+      } @else {
+        <span class="mini">Mascota oficial</span>
+        <span class="nombre">KIRA-BOT</span>
+      }
+    </div>
+
+    <div>
+      <div class="hashtags">
+        <span class="rosa">#ReviewsAnime</span>
+        <span class="cyan">#MangaDebates</span>
+        <span class="violeta">#TierLists</span>
+      </div>
+      <div class="stats">
+        <div><div class="num">Publicá</div><div class="lbl">Texto e imágenes</div></div>
+        <div><div class="num">♥ Likes</div><div class="lbl">Reaccioná</div></div>
+        <div><div class="num">Debatí</div><div class="lbl">Comentarios</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="formularios">
+    <div class="pestanas" role="tablist" aria-label="Acceso">
+      <button
+        type="button"
+        role="tab"
+        id="tab-login"
+        class="login"
+        aria-controls="panel-acceso"
+        [class.activa]="pestana() === 'login'"
+        [attr.aria-selected]="pestana() === 'login'"
+        (click)="cambiar('login')"
+      >
+        <app-icono nombre="entrar" />
+        Iniciar sesión
+      </button>
+      <button
+        type="button"
+        role="tab"
+        id="tab-registro"
+        class="registro"
+        aria-controls="panel-acceso"
+        [class.activa]="pestana() === 'registro'"
+        [attr.aria-selected]="pestana() === 'registro'"
+        (click)="cambiar('registro')"
+      >
+        <app-icono nombre="usuario-mas" />
+        Registrarse
+      </button>
+    </div>
+
+    <div
+      id="panel-acceso"
+      class="panel-pestana"
+      role="tabpanel"
+      [attr.aria-labelledby]="pestana() === 'login' ? 'tab-login' : 'tab-registro'"
+    >
+      @if (pestana() === 'login') {
+        <div class="encabezado">
+          <h2>Bienvenido/a de vuelta</h2>
+          <p>El contenido de AnimeVerse es privado: entrá con tu cuenta para verlo.</p>
+        </div>
+        <app-login-form (irARegistro)="cambiar('registro')" />
+      } @else {
+        <div class="encabezado">
+          <h2>Creá tu cuenta</h2>
+          <p>Tu nombre de usuario es único y no se puede cambiar después.</p>
+        </div>
+        <app-registro-form (previewCambio)="fotoElegida.set($event)" />
+      }
+    </div>
+  </section>
+</main>

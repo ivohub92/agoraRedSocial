@@ -1,0 +1,206 @@
+<form class="form-stack" [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+  <div class="field">
+    <label for="imagenPerfil">Tu imagen de perfil</label>
+    <div class="foto">
+      <label for="imagenPerfil" class="cuadro" [class.con-foto]="preview()" title="Elegir imagen">
+        @if (preview(); as src) {
+          <img [src]="src" alt="Vista previa de la imagen de perfil" />
+        } @else {
+          <app-icono nombre="imagen" [tam]="22" />
+        }
+      </label>
+      <div class="foto-datos">
+        <div class="botones">
+          <label for="imagenPerfil" class="btn btn-secondary">Elegir imagen</label>
+          @if (imagen()) {
+            <button type="button" class="link" (click)="quitarImagen(archivo)">Quitar</button>
+          }
+        </div>
+        <input
+          #archivo
+          id="imagenPerfil"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          (change)="seleccionarImagen($event)"
+        />
+        <div class="hint">{{ imagen()?.name ?? 'Opcional · JPG, PNG, WEBP o GIF · hasta 5 MB' }}</div>
+        @if (errorImagen(); as e) {
+          <div class="error">{{ e }}</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div class="field">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" class="input cyan" formControlName="nombre" autocomplete="given-name" [class.invalid]="invalido('nombre')" />
+      @if (invalido('nombre')) {
+        <div class="error">El nombre es obligatorio (máx. 50).</div>
+      }
+    </div>
+    <div class="field">
+      <label for="apellido">Apellido</label>
+      <input id="apellido" class="input cyan" formControlName="apellido" autocomplete="family-name" [class.invalid]="invalido('apellido')" />
+      @if (invalido('apellido')) {
+        <div class="error">El apellido es obligatorio (máx. 50).</div>
+      }
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="nombreUsuario">Nombre de usuario</label>
+    <div class="con-icono">
+      <app-icono nombre="arroba" />
+      <input
+        id="nombreUsuario"
+        class="input cyan"
+        formControlName="nombreUsuario"
+        autocomplete="username"
+        placeholder="ej: OtakuCritic_99"
+        [class.invalid]="invalido('nombreUsuario')"
+      />
+    </div>
+    @if (invalido('nombreUsuario')) {
+      <div class="error">
+        @if (form.controls.nombreUsuario.hasError('required')) {
+          El nombre de usuario es obligatorio.
+        } @else if (form.controls.nombreUsuario.hasError('pattern')) {
+          Solo letras, números, puntos y guiones bajos.
+        } @else {
+          Debe tener entre 3 y 30 caracteres.
+        }
+      </div>
+    } @else if (usuario()) {
+      <div class="hint">Tu perfil: animeverse.red/&#64;{{ usuario() }}</div>
+    }
+  </div>
+
+  <div class="field">
+    <label for="correo">Correo electrónico</label>
+    <div class="con-icono">
+      <app-icono nombre="correo" />
+      <input
+        id="correo"
+        class="input cyan"
+        type="email"
+        formControlName="correo"
+        autocomplete="email"
+        placeholder="tu@correo.com"
+        [class.invalid]="invalido('correo')"
+      />
+    </div>
+    @if (invalido('correo')) {
+      <div class="error">
+        {{ form.controls.correo.hasError('required') ? 'El correo es obligatorio.' : 'Ingresá un correo válido.' }}
+      </div>
+    }
+  </div>
+
+  <div class="row-2">
+    <div class="field">
+      <label for="reg-password">Contraseña</label>
+      <div class="con-icono">
+        <app-icono nombre="candado" />
+        <input
+          id="reg-password"
+          class="input cyan"
+          [type]="verPassword() ? 'text' : 'password'"
+          formControlName="password"
+          autocomplete="new-password"
+          placeholder="Creá tu contraseña"
+          [class.invalid]="invalido('password')"
+        />
+        <button
+          type="button"
+          class="ojo"
+          [attr.aria-label]="verPassword() ? 'Ocultar contraseñas' : 'Mostrar contraseñas'"
+          [attr.aria-pressed]="verPassword()"
+          (click)="verPassword.set(!verPassword())"
+        >
+          <app-icono [nombre]="verPassword() ? 'ojo-tachado' : 'ojo'" />
+        </button>
+      </div>
+      @if (invalido('password')) {
+        <div class="error">Mínimo 8 caracteres, una mayúscula y un número.</div>
+      }
+    </div>
+    <div class="field">
+      <label for="repetirPassword">Repetir contraseña</label>
+      <div class="con-icono">
+        <app-icono nombre="candado" />
+        <input
+          id="repetirPassword"
+          class="input cyan"
+          [type]="verPassword() ? 'text' : 'password'"
+          formControlName="repetirPassword"
+          autocomplete="new-password"
+          placeholder="Otra vez"
+          [class.invalid]="invalido('repetirPassword') || noCoinciden"
+        />
+      </div>
+      @if (invalido('repetirPassword')) {
+        <div class="error">Repetí la contraseña.</div>
+      } @else if (noCoinciden) {
+        <div class="error">Las contraseñas no coinciden.</div>
+      }
+    </div>
+  </div>
+
+  <div class="fuerza" [attr.data-nivel]="fuerza()" aria-live="polite">
+    @for (n of barras; track n) {
+      <div class="barra" [class.llena]="n <= fuerza()"></div>
+    }
+    <span>{{ etiquetaFuerza() || 'Mín. 8 caracteres, una mayúscula y un número' }}</span>
+  </div>
+
+  <div class="field">
+    <label for="fechaNacimiento">Fecha de nacimiento</label>
+    <app-fecha-select
+      inputId="fechaNacimiento"
+      formControlName="fechaNacimiento"
+      [invalido]="invalido('fechaNacimiento')"
+    />
+    @if (invalido('fechaNacimiento')) {
+      <div class="error">
+        @if (form.controls.fechaNacimiento.hasError('required')) {
+          Elegí día, mes y año de nacimiento.
+        } @else if (form.controls.fechaNacimiento.hasError('fechaFutura')) {
+          La fecha de nacimiento no puede ser futura.
+        } @else if (form.controls.fechaNacimiento.hasError('edadMinima')) {
+          Tenés que tener al menos 13 años.
+        } @else {
+          La fecha no es válida.
+        }
+      </div>
+    }
+  </div>
+
+  <div class="field">
+    <label for="descripcion">Descripción breve</label>
+    <textarea
+      id="descripcion"
+      class="input cyan"
+      rows="2"
+      maxlength="200"
+      formControlName="descripcion"
+      placeholder="Tu top 3 de animes, lo que estás leyendo…"
+    ></textarea>
+    <div class="hint">{{ descripcion().length }} / 200 caracteres</div>
+  </div>
+
+  <div>
+    <label class="check">
+      <input type="checkbox" formControlName="terminos" />
+      <span>Acepto las normas de convivencia y la política de privacidad.</span>
+    </label>
+    @if (invalido('terminos')) {
+      <div class="error terminos">Tenés que aceptar las normas para crear la cuenta.</div>
+    }
+  </div>
+
+  <button type="submit" class="btn btn-cyan btn-block" [disabled]="enviando()">
+    <span>{{ enviando() ? 'Creando cuenta…' : 'Crear cuenta' }}</span>
+    <app-icono nombre="destellos" />
+  </button>
+</form>

@@ -1,0 +1,54 @@
+@let p = publicacion();
+<article class="glass-panel" [class]="acento()">
+  <div class="cabecera">
+    <app-avatar [usuario]="p.usuario" [size]="38" [variante]="esMia() ? 'propio' : 'otro'" />
+    <div class="quien">
+      <div class="linea">
+        <span class="autor">{{ p.usuario.nombre }} {{ p.usuario.apellido }}</span>
+        @if (esMia()) {
+          <span class="tag tag-accent">#Tuya</span>
+        } @else {
+          <span class="tag tag-accent-2">&#64;{{ p.usuario.nombreUsuario }}</span>
+        }
+      </div>
+      <span class="meta">{{ p.createdAt | tiempoRelativo }}</span>
+    </div>
+    @if (meGusta().cantidad > 0) {
+      <span class="puntaje" title="Cantidad de me gusta">
+        <app-icono nombre="estrella" [tam]="13" />
+        {{ meGusta().cantidad }}
+      </span>
+    }
+  </div>
+
+  <h3>{{ p.titulo }}</h3>
+  <p class="texto">{{ p.mensaje }}</p>
+
+  @if (p.imagen) {
+    <div class="foto">
+      <img [src]="p.imagen" [alt]="'Imagen de la publicación ' + p.titulo" loading="lazy" />
+    </div>
+  }
+
+  <div class="acciones">
+    <button
+      type="button"
+      class="me-gusta"
+      [class.activo]="meGusta().porMi"
+      [disabled]="!logueado() || procesando()"
+      [attr.aria-pressed]="meGusta().porMi"
+      [title]="logueado() ? (meGusta().porMi ? 'Quitar me gusta' : 'Dar me gusta') : 'Iniciá sesión para dar me gusta'"
+      (click)="alternarMeGusta()"
+    >
+      <app-icono nombre="corazon" />
+      {{ meGusta().cantidad }} Me gusta
+    </button>
+
+    @if (puedeEliminar()) {
+      <button type="button" class="eliminar" [disabled]="procesando()" (click)="eliminar()">
+        <app-icono nombre="papelera" [tam]="15" />
+        Eliminar
+      </button>
+    }
+  </div>
+</article>

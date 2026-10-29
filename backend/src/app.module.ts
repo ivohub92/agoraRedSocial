@@ -10,7 +10,7 @@ import { PublicacionesModule } from './publicaciones/publicaciones.module.js';
 import { SaludController } from './salud.controller.js';
 import { UsersModule } from './users/users.module.js';
 
-
+/** Explica por qué no hay URI de MongoDB (solo muestra nombres de variables, nunca valores). */
 function motivoSinUri(): string {
   if ('MONGODB_URI' in process.env) {
     return 'La variable de entorno MONGODB_URI existe pero está vacía.';
@@ -31,7 +31,8 @@ function motivoSinUri(): string {
         const uri = config.get<string>('MONGODB_URI')?.trim();
         return {
           uri,
-     
+          // La app arranca sin esperar a MongoDB y se conecta en segundo plano;
+          // si la conexión falla, el motivo se ve en GET / en lugar de tumbar el servidor.
           lazyConnection: true,
           serverSelectionTimeoutMS: 10_000,
           connectionFactory: (conexion: Connection) => {
@@ -49,7 +50,7 @@ function motivoSinUri(): string {
         };
       },
     }),
-   
+    // Sirve las imágenes subidas en /uploads/<archivo>
     ServeStaticModule.forRoot({ rootPath: UPLOADS_DIR, serveRoot: '/uploads' }),
     UsersModule,
     AuthModule,

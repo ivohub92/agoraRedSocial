@@ -1,17 +1,24 @@
 @if (modal.actual(); as datos) {
-  <div class="dialog-backdrop" (click)="modal.cerrar()">
+  <div class="dialog-backdrop" (click)="modal.descartar()">
     <div
       class="dialog"
-      [class.error]="datos.tipo === 'error'"
+      [class.error]="datos.tipo === 'error' || datos.tipo === 'confirmacion'"
+      [class.exito]="datos.tipo === 'exito' || datos.tipo === 'info'"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-titulo"
       (click)="$event.stopPropagation()"
     >
-      <div class="kicker">{{ etiquetas[datos.tipo] }}</div>
+      <div class="cabeza">
+        <span class="icono"><app-icono [nombre]="iconos[datos.tipo]" [tam]="20" /></span>
+        <div class="kicker" [class.cyan]="datos.tipo === 'exito' || datos.tipo === 'info'">{{ etiquetas[datos.tipo] }}</div>
+      </div>
       <div class="dialog-title" id="modal-titulo">{{ datos.titulo }}</div>
       <div class="dialog-body">{{ datos.mensaje }}</div>
       <div class="dialog-actions">
+        @if (datos.textoCancelar) {
+          <button class="btn btn-secondary" (click)="modal.cancelar()">{{ datos.textoCancelar }}</button>
+        }
         <button #boton class="btn btn-primary" (click)="modal.cerrar()">
           {{ datos.textoBoton ?? 'Aceptar' }}
         </button>
