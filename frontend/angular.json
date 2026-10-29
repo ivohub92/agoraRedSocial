@@ -52,7 +52,7 @@
               }
             ],
             "styles": [
-              "src/styles/animeverse.css",
+              "src/styles/animegate.css",
               "src/styles.scss"
             ]
           },

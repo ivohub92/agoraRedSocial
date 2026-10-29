@@ -1,0 +1,90 @@
+// Pantalla de carga del diseño: fondo oscuro desenfocado, KIRA-BOT con un anillo
+// cyan que gira y otro rosa que late, y el texto titilando en Orbitron.
+.cargador {
+  position: fixed;
+  inset: 0;
+  z-index: 900; // debajo del modal (1000), arriba de todo lo demás
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2, 6, 23, 0.8);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.mascota {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+
+  .giro,
+  .pulso {
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .giro {
+    inset: 0;
+    border: 2px dashed var(--anime-cyan);
+    animation: spin 12s linear infinite;
+  }
+
+  .pulso {
+    inset: 4px;
+    border: 2px solid var(--anime-pink);
+    opacity: 0.4;
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  img {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    padding: 4px;
+    border-radius: 50%;
+    border: 1px solid #334155;
+    background: #0f172a;
+  }
+}
+
+.texto {
+  margin-top: 16px;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-align: center;
+  color: var(--anime-cyan);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+  animation: latir 1.2s ease-in-out infinite;
+}
+
+.detalle {
+  margin-top: 8px;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--anime-pink);
+  text-shadow: 0 0 8px rgba(255, 42, 133, 0.6);
+  animation: aparecer 0.3s ease-out both;
+}
+
+@keyframes latir {
+  50% {
+    opacity: 0.4;
+  }
+}

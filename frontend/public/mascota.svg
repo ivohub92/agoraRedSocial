@@ -1,4 +1,4 @@
-<!-- KIRA-BOT, mascota oficial de AnimeVerse -->
+<!-- KIRA-BOT, mascota oficial de AnimeGate -->
 <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
     <!-- Fondo Neón Cyberpunk Circular -->
     <circle cx="100" cy="100" r="90" fill="#0d0f18" stroke="#00f0ff" stroke-width="3" stroke-dasharray="8 4"/>
@@ -34,7 +34,7 @@
     <ellipse cx="65" cy="108" rx="6" ry="3" fill="#ff2a85" opacity="0.6"/>
     <ellipse cx="135" cy="108" rx="6" ry="3" fill="#ff2a85" opacity="0.6"/>
 
-    <!-- Detalle Chapa de Crítico AnimeVerse -->
+    <!-- Detalle Chapa de Crítico AnimeGate -->
     <rect x="85" y="152" width="30" height="12" rx="4" fill="#ff2a85"/>
     <text x="100" y="161" font-family="sans-serif" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">PRO</text>
 </svg>

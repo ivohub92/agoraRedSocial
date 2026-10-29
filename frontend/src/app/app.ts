@@ -3,13 +3,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { Navbar } from './layout/navbar/navbar';
+import { Cargador } from './shared/cargador/cargador';
 import { Modal } from './shared/modal/modal';
 
 const RUTAS_SIN_NAVBAR = ['/login'];
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, Modal],
+  imports: [RouterOutlet, Navbar, Modal, Cargador],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

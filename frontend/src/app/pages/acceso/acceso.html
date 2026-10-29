@@ -4,7 +4,7 @@
       <div class="kicker"><span class="punto"></span>Red social</div>
       <h1 class="marca">
         <img src="logo.svg" alt="" width="44" height="44" />
-        <span><span class="texto-gradiente">ANIME</span>VERSE</span>
+        <span><span class="texto-gradiente">ANIME</span>GATE</span>
       </h1>
       <p class="descripcion">
         Comunidad para debatir, puntuar y compartir reseñas de anime y manga. Publicá, dale me gusta
@@ -17,7 +17,7 @@
         @if (fotoElegida(); as src) {
           <img class="usuario" [src]="src" alt="Vista previa de tu imagen de perfil" />
         } @else {
-          <img src="mascota.svg" alt="KIRA-BOT, la mascota de AnimeVerse" />
+          <img src="mascota.svg" alt="KIRA-BOT, la mascota de AnimeGate" />
         }
         <div class="brillo"></div>
       </div>
@@ -83,7 +83,7 @@
       @if (pestana() === 'login') {
         <div class="encabezado">
           <h2>Bienvenido/a de vuelta</h2>
-          <p>El contenido de AnimeVerse es privado: entrá con tu cuenta para verlo.</p>
+          <p>El contenido de AnimeGate es privado: entrá con tu cuenta para verlo.</p>
         </div>
         <app-login-form (irARegistro)="cambiar('registro')" />
       } @else {

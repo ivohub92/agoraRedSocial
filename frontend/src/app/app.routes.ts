@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     // Login y registro comparten página: son dos pestañas (?tab=registro).
     path: 'login',
-    title: 'Acceso · AnimeVerse',
+    title: 'Acceso · AnimeGate',
     loadComponent: () => import('./pages/acceso/acceso').then((m) => m.Acceso),
   },
   {
@@ -17,13 +17,13 @@ export const routes: Routes = [
   },
   {
     path: 'publicaciones',
-    title: 'Publicaciones · AnimeVerse',
+    title: 'Publicaciones · AnimeGate',
     loadComponent: () =>
       import('./pages/publicaciones/publicaciones').then((m) => m.Publicaciones),
   },
   {
     path: 'mi-perfil',
-    title: 'Mi perfil · AnimeVerse',
+    title: 'Mi perfil · AnimeGate',
     loadComponent: () => import('./pages/mi-perfil/mi-perfil').then((m) => m.MiPerfil),
   },
   { path: '**', redirectTo: 'login' },

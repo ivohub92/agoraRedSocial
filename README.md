@@ -1,8 +1,8 @@
-# AnimeVerse · Red social (Programación IV – TP 2)
+# AnimeGate · Red social (Programación IV – TP 2)
 
 | Carpeta     | Tecnología          |
 |-------------|---------------------|
-| `frontend/` | Angular 21 (tema AnimeVerse: oscuro, neón y paneles de vidrio) |
+| `frontend/` | Angular 21 (tema AnimeGate: oscuro, neón y paneles de vidrio) |
 | `backend/`  | NestJS 12 + MongoDB |
 
 ## Sprint 1 – qué incluye
@@ -82,7 +82,7 @@ Los `.npmrc` de cada carpeta hacen que la instalación use `legacy-peer-deps` so
    - `MONGODB_URI` → la URI de Atlas.
    - `CORS_ORIGIN` → la URL del front (ej. `https://agora-social-ruddy.vercel.app`).
      Para probar también desde la PC: `https://agora-social-ruddy.vercel.app,http://localhost:4200`.
-3. **Apply**. Al terminar, Render muestra la URL del backend (ej. `https://agora-backend.onrender.com`).
+3. **Apply**. Al terminar, Render muestra la URL del backend (ej. `https://agora-backend-zvdv.onrender.com`).
 4. Abrir esa URL: debe responder `{"estado":"ok","mongo":"conectado",...}`.
    Si responde `"estado":"error"`, el campo `error` dice el motivo.
 
@@ -122,6 +122,20 @@ verifican el status y el mensaje:
 3. Los dos pedidos marcados **"elegir archivo"** necesitan seleccionar el archivo a mano en Body
    (o destildarlos en el Runner).
 4. Para probar el backend desplegado, cambiar la variable `baseUrl` de la colección (pestaña Variables).
+
+### Sprint 2 · publicaciones
+
+`postman/animegate-sprint2.postman_collection.json` tiene **37 consultas** (73 verificaciones) para el
+módulo publicaciones. Usa dos usuarios que crea la carpeta 0 (Ana y Beto) y manda el usuario en el header
+`X-Usuario-Id`.
+
+| Carpeta | Qué prueba |
+|---|---|
+| 0 · Preparación | Salud del backend y registro de Ana y Beto (guarda sus `_id`) |
+| 1 · Alta | 201 con puntaje y sin puntaje (debate), con imagen; 401 sin usuario; 400 por título, mensaje, puntaje y campos no permitidos |
+| 2 · Listado | Orden por fecha por defecto, `offset`/`limit` (paginado), filtro `usuario`; 400 por parámetros inválidos |
+| 3 · Me gusta | 201 al dar, 409 si se repite, `meGustaPorMi`, orden por me gusta, 200 al quitar, 409 si no lo había dado, 401/404/400 |
+| 4 · Baja lógica | 403 si no es el autor, 401, 200 al eliminar, desaparece del listado, 404 al repetir |
 
 ## Conectar MongoDB Atlas
 

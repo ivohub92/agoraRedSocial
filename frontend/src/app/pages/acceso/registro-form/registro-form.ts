@@ -155,7 +155,7 @@ export class RegistroForm implements OnDestroy {
         this.enviando.set(false);
         this.modal.exito(
           'Cuenta creada',
-          `Bienvenido/a a AnimeVerse, ${usuario.nombre}. Ya podés entrar a tu cronología.`,
+          `Bienvenido/a a AnimeGate, ${usuario.nombre}. Ya podés entrar a tu cronología.`,
           () => this.router.navigateByUrl('/publicaciones'),
         );
       },
