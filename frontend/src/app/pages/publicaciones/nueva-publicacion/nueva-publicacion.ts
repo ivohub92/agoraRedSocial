@@ -5,6 +5,7 @@ import { AuthService, mensajeDeError } from '../../../core/auth.service';
 import { Publicacion } from '../../../core/models';
 import { PublicacionesService } from '../../../core/publicaciones.service';
 import { Avatar } from '../../../shared/avatar/avatar';
+import { Estrellas } from '../../../shared/estrellas/estrellas';
 import { Icono } from '../../../shared/icono/icono';
 import { ModalService } from '../../../shared/modal/modal.service';
 
@@ -14,7 +15,7 @@ const MAX_IMAGEN_MB = 5;
 /** Caja para escribir una publicación nueva: título, mensaje e imagen opcional. */
 @Component({
   selector: 'app-nueva-publicacion',
-  imports: [ReactiveFormsModule, Avatar, Icono],
+  imports: [ReactiveFormsModule, Avatar, Icono, Estrellas],
   templateUrl: './nueva-publicacion.html',
   styleUrl: './nueva-publicacion.scss',
 })
@@ -28,6 +29,8 @@ export class NuevaPublicacion implements OnDestroy {
   protected readonly enviando = signal(false);
   protected readonly imagen = signal<File | null>(null);
   protected readonly preview = signal<string | null>(null);
+  /** Estrellas de 1 a 5, opcionales (una publicación de debate no las lleva). */
+  protected readonly puntaje = signal<number | null>(null);
 
   protected readonly form = inject(FormBuilder).nonNullable.group({
     titulo: ['', [Validators.required, Validators.maxLength(100)]],
@@ -76,6 +79,8 @@ export class NuevaPublicacion implements OnDestroy {
     datos.append('mensaje', mensaje.trim());
     const imagen = this.imagen();
     if (imagen) datos.append('imagen', imagen);
+    const puntaje = this.puntaje();
+    if (puntaje) datos.append('puntaje', String(puntaje));
 
     this.enviando.set(true);
     this.servicio.crear(datos).subscribe({
@@ -83,6 +88,7 @@ export class NuevaPublicacion implements OnDestroy {
         this.enviando.set(false);
         this.form.reset();
         this.quitarImagen();
+        this.puntaje.set(null);
         this.publicada.emit(publicacion);
       },
       error: (err) => {

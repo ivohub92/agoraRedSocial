@@ -18,6 +18,10 @@ export class Publicacion {
   @Prop({ type: String, default: null })
   imagen: string | null;
 
+  /** Puntaje de 1 a 5 estrellas (null cuando la publicación es un debate sin puntuar). */
+  @Prop({ type: Number, min: 1, max: 5, default: null })
+  puntaje: number | null;
+
   /** Usuarios que dieron me gusta (cada uno a lo sumo una vez). */
   @Prop({ type: [{ type: Types.ObjectId, ref: User.name }], default: [] })
   meGusta: Types.ObjectId[];

@@ -34,6 +34,8 @@ export interface Publicacion {
   titulo: string;
   mensaje: string;
   imagen: string | null;
+  /** 1 a 5 estrellas; null si es un debate sin puntuar. */
+  puntaje: number | null;
   usuario: Autor;
   cantidadMeGusta: number;
   /** Si el usuario que consulta ya le dio me gusta. */

@@ -60,11 +60,12 @@ article {
   }
 }
 
-// Recuadro ámbar con estrella, como el puntaje del diseño (acá cuenta los me gusta).
+// Recuadro ámbar con las estrellas, como el puntaje del diseño.
 .puntaje {
   display: flex;
   align-items: center;
-  gap: 5px;
+  flex: none;
+  gap: 6px;
   padding: 4px 10px;
   border-radius: 8px;
   border: 1px solid rgba(245, 158, 11, 0.3);
@@ -73,10 +74,6 @@ article {
   font-family: var(--font-heading);
   font-size: 12px;
   font-weight: 700;
-
-  ::ng-deep svg {
-    fill: currentColor;
-  }
 }
 
 h3 {

@@ -3,6 +3,7 @@ import { AuthService, mensajeDeError } from '../../core/auth.service';
 import { EstadoMeGusta, Publicacion } from '../../core/models';
 import { PublicacionesService } from '../../core/publicaciones.service';
 import { Avatar } from '../avatar/avatar';
+import { Estrellas } from '../estrellas/estrellas';
 import { Icono } from '../icono/icono';
 import { ModalService } from '../modal/modal.service';
 import { TiempoRelativoPipe } from '../pipes/tiempo-relativo.pipe';
@@ -10,7 +11,7 @@ import { TiempoRelativoPipe } from '../pipes/tiempo-relativo.pipe';
 /** Una publicación del listado: autor, contenido, me gusta y eliminar (si es propia). */
 @Component({
   selector: 'app-publicacion',
-  imports: [Avatar, TiempoRelativoPipe, Icono],
+  imports: [Avatar, TiempoRelativoPipe, Icono, Estrellas],
   templateUrl: './publicacion.html',
   styleUrl: './publicacion.scss',
 })

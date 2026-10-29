@@ -13,10 +13,10 @@
       </div>
       <span class="meta">{{ p.createdAt | tiempoRelativo }}</span>
     </div>
-    @if (meGusta().cantidad > 0) {
-      <span class="puntaje" title="Cantidad de me gusta">
-        <app-icono nombre="estrella" [tam]="13" />
-        {{ meGusta().cantidad }}
+    @if (p.puntaje) {
+      <span class="puntaje" [title]="'Puntaje: ' + p.puntaje + ' de 5'">
+        <app-estrellas [valor]="p.puntaje" [soloLectura]="true" [tam]="13" />
+        <span>{{ p.puntaje }} / 5</span>
       </span>
     }
   </div>

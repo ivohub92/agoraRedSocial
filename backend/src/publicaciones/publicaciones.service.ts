@@ -134,6 +134,8 @@ export class PublicacionesService {
     const id = idUsuarioActual && isValidObjectId(idUsuarioActual) ? idUsuarioActual : null;
     return {
       ...resto,
+      // Las publicaciones creadas antes de existir el puntaje no tienen el campo.
+      puntaje: resto.puntaje ?? null,
       meGustaPorMi: id ? meGusta.some((u) => String(u) === id) : false,
     };
   }

@@ -37,6 +37,21 @@
         </div>
       }
 
+      <div class="puntuar">
+        <span class="etiqueta">
+          <app-icono nombre="estrella" [tam]="13" />
+          Puntaje
+        </span>
+        <app-estrellas [(valor)]="puntaje" />
+        <span class="ayuda">
+          @if (puntaje(); as n) {
+            {{ n }} / 5 · tocá la misma estrella para quitarlo
+          } @else {
+            Opcional: puntuá el anime o manga. Si es un debate, dejalo vacío.
+          }
+        </span>
+      </div>
+
       <div class="pie">
         <label class="adjuntar">
           <app-icono nombre="imagen" />
